@@ -1,6 +1,7 @@
 /* =========================================================
    Thème clair/sombre · bilingue FR/EN · apparition · bulles
    · épicycle (cercles de Fourier) qui dessine un oiseau
+     — silhouette lisse + traînée en fondu
    ========================================================= */
 
 /* ---------------- i18n (traductions) ---------------- */
@@ -101,9 +102,7 @@ const I18N = {
   }
 };
 
-function getLang() {
-  try { return localStorage.getItem("lang") || "fr"; } catch (e) { return "fr"; }
-}
+function getLang() { try { return localStorage.getItem("lang") || "fr"; } catch (e) { return "fr"; } }
 function applyLang(lang) {
   const dict = I18N[lang] || I18N.fr;
   document.querySelectorAll("[data-i18n]").forEach((el) => {
@@ -111,9 +110,7 @@ function applyLang(lang) {
     if (dict[k] != null) el.innerHTML = dict[k];
   });
   document.documentElement.setAttribute("lang", lang);
-  document.querySelectorAll(".lang button").forEach((b) => {
-    b.classList.toggle("active", b.dataset.lang === lang);
-  });
+  document.querySelectorAll(".lang button").forEach((b) => b.classList.toggle("active", b.dataset.lang === lang));
   try { localStorage.setItem("lang", lang); } catch (e) {}
 }
 
@@ -132,20 +129,16 @@ function applyLang(lang) {
   });
 })();
 
-/* ---------------- Langue (init + boutons) ---------------- */
+/* ---------------- Langue ---------------- */
 (function () {
   applyLang(getLang());
-  document.querySelectorAll(".lang button").forEach((b) => {
-    b.addEventListener("click", () => applyLang(b.dataset.lang));
-  });
+  document.querySelectorAll(".lang button").forEach((b) => b.addEventListener("click", () => applyLang(b.dataset.lang)));
 })();
 
 /* ---------------- Apparition au défilement ---------------- */
 (function () {
   const items = document.querySelectorAll("[data-reveal]");
-  if (!("IntersectionObserver" in window) || !items.length) {
-    items.forEach((el) => el.classList.add("in")); return;
-  }
+  if (!("IntersectionObserver" in window) || !items.length) { items.forEach((el) => el.classList.add("in")); return; }
   const io = new IntersectionObserver((entries) => {
     entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } });
   }, { threshold: 0.12 });
@@ -174,40 +167,34 @@ function applyLang(lang) {
   if (!canvas) return;
   const ctx = canvas.getContext("2d");
 
-  // Silhouette d'oiseau ORIGINALE (sens horaire), coords y vers le bas (négatif = haut)
-  const BIRD = [
-    [0,-150],[7,-141],[13,-129],[21,-120],
-    [60,-129],[106,-141],[151,-150],[190,-149],[201,-139],
-    [166,-119],[121,-107],[81,-95],[49,-83],[37,-63],
-    [23,-30],[17,10],[21,55],[27,110],[14,131],
-    [0,118],
-    [-14,131],[-27,110],[-21,55],[-17,10],[-23,-30],
-    [-37,-63],[-49,-83],[-81,-95],[-121,-107],[-166,-119],[-201,-139],
-    [-190,-149],[-151,-150],[-106,-141],[-60,-129],
-    [-21,-120],[-13,-129],[-7,-141]
-  ];
+  // Silhouette d'oiseau ORIGINALE — courbes de Bézier lisses, un seul tracé fermé.
+  // (mouette en vol, vue de face : ailes déployées, petit corps, queue)
+  // Mouette en vol (silhouette fine, deux ailes + petit corps) — tracé lisse, fermé.
+  const BIRD_PATH =
+    "M 20 78 " +
+    "C 56 50 86 42 114 40 " +            // aile gauche : bord haut vers la crête
+    "C 150 42 176 58 200 70 " +          // descente vers le centre (tête/corps)
+    "C 224 58 250 42 286 40 " +          // montée vers la crête de l'aile droite
+    "C 314 42 344 50 380 78 " +          // vers la pointe de l'aile droite
+    "C 350 72 320 70 296 73 " +          // bord bas de l'aile droite
+    "C 256 80 226 92 208 99 " +          // vers le ventre
+    "C 204 103 196 103 192 99 " +        // petit ventre arrondi
+    "C 174 92 144 80 104 73 " +          // bord bas de l'aile gauche
+    "C 80 70 50 72 20 78 Z";             // retour à la pointe gauche
 
-  const N = 240;
+  const N = 320;
 
-  function resampleClosed(pts, n) {
-    const P = pts.map((p) => ({ x: p[0], y: p[1] }));
-    const seg = []; let total = 0;
-    for (let i = 0; i < P.length; i++) {
-      const a = P[i], b = P[(i + 1) % P.length];
-      const d = Math.hypot(b.x - a.x, b.y - a.y);
-      seg.push({ a, b, d, acc: total }); total += d;
-    }
-    const out = [];
-    for (let i = 0; i < n; i++) {
-      const target = (total * i) / n;
-      let s = seg[seg.length - 1];
-      for (let j = 0; j < seg.length; j++) {
-        if (target >= seg[j].acc && target <= seg[j].acc + seg[j].d) { s = seg[j]; break; }
-      }
-      const t = s.d ? (target - s.acc) / s.d : 0;
-      out.push({ re: s.a.x + (s.b.x - s.a.x) * t, im: s.a.y + (s.b.y - s.a.y) * t });
-    }
-    return out;
+  function samplePath(d, n) {
+    const NS = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("width", "10"); svg.setAttribute("height", "10");
+    svg.style.position = "absolute"; svg.style.left = "-9999px"; svg.style.top = "0"; svg.style.visibility = "hidden";
+    const p = document.createElementNS(NS, "path");
+    p.setAttribute("d", d); svg.appendChild(p); document.body.appendChild(svg);
+    const L = p.getTotalLength(); const pts = [];
+    for (let i = 0; i < n; i++) { const pt = p.getPointAtLength((L * i) / n); pts.push({ re: pt.x, im: pt.y }); }
+    document.body.removeChild(svg);
+    return pts;
   }
 
   function dft(x) {
@@ -220,95 +207,103 @@ function applyLang(lang) {
         im += -x[i].re * Math.sin(phi) + x[i].im * Math.cos(phi);
       }
       re /= n; im /= n;
-      const freq = k <= n / 2 ? k : k - n;
-      X.push({ freq, amp: Math.hypot(re, im), phase: Math.atan2(im, re), re, im });
+      X.push({ freq: k <= n / 2 ? k : k - n, amp: Math.hypot(re, im), phase: Math.atan2(im, re) });
     }
     X.sort((a, b) => b.amp - a.amp);
     return X;
   }
 
-  const samples = resampleClosed(BIRD, N);
+  const samples = samplePath(BIRD_PATH, N);
   const terms = dft(samples);
-  const c0 = terms.find((t) => t.freq === 0) || { re: 0, im: 0 };
 
-  let W, H, scale, originX, originY, dpr;
+  let minX = 1e9, minY = 1e9, maxX = -1e9, maxY = -1e9;
+  samples.forEach((s) => { minX = Math.min(minX, s.re); maxX = Math.max(maxX, s.re); minY = Math.min(minY, s.im); maxY = Math.max(maxY, s.im); });
+  const dcx = (minX + maxX) / 2, dcy = (minY + maxY) / 2, dW = maxX - minX, dH = maxY - minY;
+
+  let W, H, dpr, scale, cx, cy, fullPts = [];
+  const TX = (x) => cx + (x - dcx) * scale;
+  const TY = (y) => cy + (y - dcy) * scale;
+  function penData(tt) {
+    let x = 0, y = 0;
+    for (const term of terms) { x += term.amp * Math.cos(term.freq * tt + term.phase); y += term.amp * Math.sin(term.freq * tt + term.phase); }
+    return { x, y };
+  }
+  function computeFull() {
+    const a = [];
+    for (let i = 0; i <= N; i++) { const p = penData((2 * Math.PI * i) / N); a.push({ x: TX(p.x), y: TY(p.y) }); }
+    return a;
+  }
   function layout() {
     dpr = Math.min(window.devicePixelRatio || 1, 2);
     const cssW = canvas.clientWidth || 520;
-    const cssH = Math.round(cssW * 0.66);
-    canvas.width = cssW * dpr; canvas.height = cssH * dpr;
-    canvas.style.height = cssH + "px";
+    const cssH = Math.round(cssW * 0.5);
+    canvas.width = cssW * dpr; canvas.height = cssH * dpr; canvas.style.height = cssH + "px";
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     W = cssW; H = cssH;
-    scale = (W * 0.8) / 420;               // largeur data ≈ 420
-    originX = W / 2 - scale * c0.re;
-    originY = H / 2 - scale * c0.im;
+    scale = Math.min((W * 0.84) / dW, (H * 0.84) / dH);
+    cx = W / 2; cy = H / 2;
+    fullPts = computeFull();
   }
 
-  let colLine = "rgba(21,119,199,0.16)", colPen = "#1577C7";
+  let colLine = "rgba(23,182,204,0.2)", colPen = "#1577C7", colDot = "#17B6CC", colGhost = "rgba(21,119,199,0.16)";
   function refreshColors() {
     const cs = getComputedStyle(document.documentElement);
     colPen = (cs.getPropertyValue("--sea") || "#1577C7").trim();
     const aqua = (cs.getPropertyValue("--aqua") || "#17B6CC").trim();
-    colLine = aqua + "33"; // alpha ~20%
+    colLine = aqua + "33"; colDot = aqua; colGhost = colPen + "26";
   }
   window.__epiColors = refreshColors;
 
-  let t = 0;
-  let trace = [];
-  const prefersReduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const DURATION = 14;     // secondes par tour complet
+  const MAXCIRCLES = 70;   // cercles dessinés (les plus gros)
+  const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let t = 0, last = performance.now(), progress = [];
 
-  function draw() {
+  function strokePts(pts, color, width) {
+    if (pts.length < 2) return;
+    ctx.strokeStyle = color; ctx.lineWidth = width; ctx.lineJoin = "round"; ctx.lineCap = "round";
+    ctx.beginPath();
+    for (let i = 0; i < pts.length; i++) { const p = pts[i]; i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y); }
+    ctx.stroke();
+  }
+
+  function frame(now) {
+    const dt = Math.min((now - last) / 1000, 0.05); last = now;
     ctx.clearRect(0, 0, W, H);
-    let x = originX, y = originY;
-    // vecteurs tournants
-    ctx.lineWidth = 1;
+
+    // oiseau complet en filigrane
+    strokePts(fullPts, colGhost, 1.5);
+
+    // chaîne de cercles
+    let x = 0, y = 0; ctx.lineWidth = 1;
     for (let i = 0; i < terms.length; i++) {
       const term = terms[i];
       const px = x, py = y;
-      const r = scale * term.amp;
-      x += r * Math.cos(term.freq * t + term.phase);
-      y += r * Math.sin(term.freq * t + term.phase);
-      if (r > 0.8 && i < 90) {
-        ctx.strokeStyle = colLine;
-        ctx.beginPath(); ctx.arc(px, py, r, 0, Math.PI * 2); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(x, y); ctx.stroke();
+      x += term.amp * Math.cos(term.freq * t + term.phase);
+      y += term.amp * Math.sin(term.freq * t + term.phase);
+      if (i < MAXCIRCLES) {
+        const r = term.amp * scale;
+        if (r > 0.6) {
+          ctx.strokeStyle = colLine;
+          ctx.beginPath(); ctx.arc(TX(px), TY(py), r, 0, 6.2832); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(TX(px), TY(py)); ctx.lineTo(TX(x), TY(y)); ctx.stroke();
+        }
       }
     }
-    trace.unshift({ x, y });
-    if (trace.length > N) trace.pop();
-    // tracé de l'oiseau
-    ctx.strokeStyle = colPen; ctx.lineWidth = 2.4; ctx.lineJoin = "round"; ctx.lineCap = "round";
-    ctx.beginPath();
-    for (let i = 0; i < trace.length; i++) {
-      if (i === 0) ctx.moveTo(trace[i].x, trace[i].y);
-      else ctx.lineTo(trace[i].x, trace[i].y);
-    }
-    ctx.stroke();
+    const penx = TX(x), peny = TY(y);
+    progress.push({ x: penx, y: peny });
 
-    t += (2 * Math.PI) / N;
-    if (t >= 2 * Math.PI) { t = 0; trace = []; }
-    requestAnimationFrame(draw);
+    // tracé lumineux en cours
+    strokePts(progress, colPen, 2.6);
+    ctx.fillStyle = colDot; ctx.beginPath(); ctx.arc(penx, peny, 3, 0, 6.2832); ctx.fill();
+
+    t += (2 * Math.PI * dt) / DURATION;
+    if (t >= 2 * Math.PI) { t -= 2 * Math.PI; progress = []; }
+    requestAnimationFrame(frame);
   }
 
-  function staticDraw() {
-    // version sans animation : trace complet de l'oiseau
-    ctx.clearRect(0, 0, W, H);
-    ctx.strokeStyle = colPen; ctx.lineWidth = 2.4; ctx.lineJoin = "round";
-    ctx.beginPath();
-    for (let i = 0; i <= N; i++) {
-      const tt = (2 * Math.PI * i) / N;
-      let x = originX, y = originY;
-      for (const term of terms) {
-        x += scale * term.amp * Math.cos(term.freq * tt + term.phase);
-        y += scale * term.amp * Math.sin(term.freq * tt + term.phase);
-      }
-      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-    }
-    ctx.stroke();
-  }
-
-  function start() { layout(); refreshColors(); if (prefersReduced) staticDraw(); else requestAnimationFrame(draw); }
-  window.addEventListener("resize", () => { layout(); if (prefersReduced) staticDraw(); });
+  function drawStatic() { ctx.clearRect(0, 0, W, H); strokePts(fullPts, colPen, 2.4); }
+  function start() { layout(); refreshColors(); if (reduce) drawStatic(); else requestAnimationFrame(frame); }
+  window.addEventListener("resize", () => { layout(); progress = []; if (reduce) drawStatic(); });
   start();
 })();
