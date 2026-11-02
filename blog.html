@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blog — Abdelmalek Bensouda</title>
+  <meta name="description" content="Notes et articles d'Abdelmalek Bensouda sur la data science, le machine learning et l'automatisation.">
+  <script>try{var t=localStorage.getItem('theme');if(!t){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="brand">AB<b>.</b></a>
+      <div class="nav-links">
+        <a href="index.html#projets" data-i18n="nav.projects">Projets</a>
+        <a href="index.html#experience" class="hide-sm" data-i18n="nav.experience">Expérience</a>
+        <a href="blog.html" data-i18n="nav.blog">Blog</a>
+        <span class="lang">
+          <button type="button" data-lang="fr">FR</button>
+          <button type="button" data-lang="en">EN</button>
+        </span>
+        <button id="theme-toggle" class="icon-btn" aria-label="Thème">☾</button>
+        <a href="index.html#contact" class="btn btn-sea" data-i18n="nav.collab">Collaborer</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="page-head">
+    <div class="wrap">
+      <p class="eyebrow" data-i18n="blog.eyebrow">Journal</p>
+      <h1 data-i18n="blog.title">Blog</h1>
+      <p data-i18n="blog.sub">Mes notes sur la data science, le machine learning, l'inférence causale et l'automatisation — au fil de mes projets et de mes lectures.</p>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <div class="posts">
+        <!-- Pour ajouter un article : duplique "article-exemple.html",
+             puis copie le bloc <a class="post-item"> ci-dessous en haut de la liste. -->
+        <a class="post-item" href="article-exemple.html">
+          <span class="date">2 nov. 2026</span>
+          <div>
+            <h3 data-i18n="post1.t">Pourquoi l'inférence causale change tout en data science</h3>
+            <p data-i18n="post1.b">Corrélation n'est pas causalité : retour sur la pondération IPTW et ce qu'elle m'a appris sur une cohorte réelle de patients.</p>
+          </div>
+          <span class="arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap footer-inner">
+      <span>© 2026 Abdelmalek Bensouda</span>
+      <span data-i18n="footer.role">Data Scientist · Paris, France</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

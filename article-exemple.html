@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pourquoi l'inférence causale change tout — Abdelmalek Bensouda</title>
+  <meta name="description" content="Corrélation n'est pas causalité : la pondération IPTW appliquée à une cohorte réelle.">
+  <script>try{var t=localStorage.getItem('theme');if(!t){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="brand">AB<b>.</b></a>
+      <div class="nav-links">
+        <a href="index.html#projets" data-i18n="nav.projects">Projets</a>
+        <a href="index.html#experience" class="hide-sm" data-i18n="nav.experience">Expérience</a>
+        <a href="blog.html" data-i18n="nav.blog">Blog</a>
+        <span class="lang">
+          <button type="button" data-lang="fr">FR</button>
+          <button type="button" data-lang="en">EN</button>
+        </span>
+        <button id="theme-toggle" class="icon-btn" aria-label="Thème">☾</button>
+        <a href="index.html#contact" class="btn btn-sea" data-i18n="nav.collab">Collaborer</a>
+      </div>
+    </div>
+  </nav>
+
+  <article class="article">
+    <div class="wrap">
+      <a href="blog.html" class="back-link" data-i18n="back">← Retour au blog</a>
+      <p class="date">2 novembre 2026 · 4 min</p>
+      <h1 data-i18n="post1.t">Pourquoi l'inférence causale change tout en data science</h1>
+
+      <p>Ceci est un article d'exemple — tu peux remplacer tout ce texte par le tien. Il te montre à quoi ressemble une page d'article et comment la structurer.</p>
+
+      <p>En data science, on répète souvent que « corrélation n'est pas causalité ». Pourtant, dès qu'on veut mesurer l'<em>effet</em> d'un traitement, d'une campagne ou d'une décision, c'est bien la causalité qui nous intéresse — pas seulement la prédiction.</p>
+
+      <h2>Le problème des biais de sélection</h2>
+      <p>Sur des données de vie réelle, les groupes qu'on compare ne sont jamais parfaitement comparables. Comparer naïvement les résultats, c'est risquer de confondre l'effet du traitement avec celui des différences initiales.</p>
+
+      <h2>La pondération IPTW, en bref</h2>
+      <p>L'<strong>IPTW</strong> repondère chaque individu par l'inverse de sa probabilité de recevoir le traitement reçu. On reconstruit une « pseudo-population » où le traitement est, en moyenne, indépendant des caractéristiques observées — ce qui rapproche l'analyse d'un essai randomisé.</p>
+
+      <p>Sur une cohorte réelle, cette approche permet de dégager un signal clair là où une comparaison brute donne des résultats trompeurs. La leçon : un bon modèle commence par une bonne question causale.</p>
+
+      <h2>Pour aller plus loin</h2>
+      <p>Tu peux illustrer un article avec une image : <code>&lt;img src="assets/mon-image.jpg" alt="description"&gt;</code>.</p>
+
+      <p style="color:var(--muted);font-size:0.95rem;border-top:1px solid var(--line);padding-top:22px;margin-top:38px">— Abdelmalek</p>
+    </div>
+  </article>
+
+  <footer>
+    <div class="wrap footer-inner">
+      <span>© 2026 Abdelmalek Bensouda</span>
+      <span data-i18n="footer.role">Data Scientist · Paris, France</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Abdelmalek Bensouda — Data Scientist</title>
+  <meta name="description" content="Abdelmalek Bensouda, Data Scientist à Paris. Machine learning en production, pipelines data, inférence causale et automatisation.">
+  <script>try{var t=localStorage.getItem('theme');if(!t){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="intro"><span data-i18n="intro">bonjour<b>.</b></span></div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="brand">AB<b>.</b></a>
+      <div class="nav-links">
+        <a href="#faire" class="hide-sm" data-i18n="nav.what">Ce que je fais</a>
+        <a href="#projets" data-i18n="nav.projects">Projets</a>
+        <a href="#experience" class="hide-sm" data-i18n="nav.experience">Expérience</a>
+        <a href="#stack" class="hide-sm" data-i18n="nav.stack">Stack</a>
+        <a href="blog.html" data-i18n="nav.blog">Blog</a>
+        <span class="lang">
+          <button type="button" data-lang="fr">FR</button>
+          <button type="button" data-lang="en">EN</button>
+        </span>
+        <button id="theme-toggle" class="icon-btn" aria-label="Thème">☾</button>
+        <a href="#contact" class="btn btn-sea" data-i18n="nav.collab">Collaborer</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero avec épicycle -->
+  <header class="hero">
+    <div class="field"></div>
+    <div class="hero-content wrap">
+      <h1 class="greet" data-i18n="hero.greet">Bonjour<b>.</b></h1>
+      <div class="epi-wrap">
+        <canvas id="epi" class="epi" width="560" height="370" role="img" aria-label="Oiseau dessiné par une série de Fourier"></canvas>
+      </div>
+      <p class="epi-cap" data-i18n="hero.cap">un oiseau dessiné par une série de Fourier</p>
+      <p class="lead" data-i18n="hero.lead">Bienvenue — jette un œil à ce que je construis.</p>
+      <div class="hero-cta">
+        <a href="#projets" class="btn" data-i18n="hero.cta1">Voir mes projets</a>
+        <a href="#contact" class="btn btn-sea" data-i18n="hero.cta2">Collaborer</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Ce que je fais -->
+    <section id="faire">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow" data-i18n="what.eyebrow">Ce que je fais</p>
+          <h2 data-i18n="what.title">De la donnée au système qui tient</h2>
+          <p data-i18n="what.sub">Trois terrains de jeu, une même exigence : des résultats fiables, mesurables et durables.</p>
+        </div>
+        <div class="cards">
+          <div class="card" data-reveal>
+            <div class="ico">🌊</div>
+            <h3 data-i18n="c1.t">Machine learning en production</h3>
+            <p data-i18n="c1.b">Scoring, NLP, systèmes RAG et agents LLM — conçus pour la précision, la latence et le coût réels, pas pour une démo de benchmark.</p>
+          </div>
+          <div class="card" data-reveal>
+            <div class="ico">⚙️</div>
+            <h3 data-i18n="c2.t">Pipelines data &amp; automatisation</h3>
+            <p data-i18n="c2.b">Ingestion, transformation, reporting et workflows (n8n, APIs). Des chaînes reproductibles qui font gagner du temps aux équipes.</p>
+          </div>
+          <div class="card" data-reveal>
+            <div class="ico">📊</div>
+            <h3 data-i18n="c3.t">Modélisation statistique</h3>
+            <p data-i18n="c3.b">Inférence causale, modèles de survie, séries temporelles. La rigueur scientifique au service de décisions fiables.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Projets -->
+    <section id="projets">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow" data-i18n="proj.eyebrow">Projets</p>
+          <h2 data-i18n="proj.title">Quelques projets</h2>
+        </div>
+        <div class="project" data-reveal>
+          <div class="num">01</div>
+          <div>
+            <h3 data-i18n="p1.t">Agent Recruteur intelligent</h3>
+            <p data-i18n="p1.b">Système de matching (RAG) automatisant l'analyse et la mise en relation entre CVs et fiches de poste, exposé via une API REST et une application web temps réel.</p>
+            <div class="tags">
+              <span class="tag">Python</span><span class="tag">FastAPI</span>
+              <span class="tag">RAG</span><span class="tag">Qdrant</span><span class="tag">Streamlit</span>
+            </div>
+          </div>
+        </div>
+        <div class="project" data-reveal>
+          <div class="num">02</div>
+          <div>
+            <h3 data-i18n="p2.t">Prédiction de churn par boosting</h3>
+            <p data-i18n="p2.b">Étude théorique des méthodes de boosting puis application à la prédiction du désabonnement sur 7 000+ clients, traduite en recommandations marketing pour réduire l'attrition.</p>
+            <div class="tags">
+              <span class="tag">Machine Learning</span><span class="tag">Boosting</span>
+              <span class="tag">Ensembles</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Expérience -->
+    <section id="experience">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow" data-i18n="exp.eyebrow">Expérience</p>
+          <h2 data-i18n="exp.title">Où j'ai travaillé</h2>
+        </div>
+        <div class="xp" data-reveal>
+          <div class="when"><span data-i18n="x1.when">Juin 2026 – Déc. 2026</span><span class="place">Paris</span></div>
+          <div>
+            <h3 data-i18n="x1.role">Data Scientist</h3>
+            <div class="org">ZestMeUp</div>
+            <ul data-i18n="x1.ul"><li>Agent de veille concurrentielle : suivi automatisé de 25 sources, scoring par LLM, synthèse hebdomadaire sur Slack.</li><li>Workflows n8n : synchronisation Instantly ↔ HubSpot, enrichissement CRM, détection de signaux d'achat (DRH/SIRH).</li><li>Plugin Figma de traduction de livres blancs par LLM, avec préservation de la mise en forme.</li><li>Automatisation du reporting SEO (Google Search Console, Analytics).</li></ul>
+          </div>
+        </div>
+        <div class="xp" data-reveal>
+          <div class="when"><span data-i18n="x2.when">Avr. 2025 – Oct. 2025</span><span class="place">Boulogne-Billancourt</span></div>
+          <div>
+            <h3 data-i18n="x2.role">Data Scientist</h3>
+            <div class="org">Groupe Astek</div>
+            <ul data-i18n="x2.ul"><li>Modélisation de l'efficacité thérapeutique du cancer du poumon (NSCLC), cohorte de 933 patients en vie réelle.</li><li>Inférence causale (IPTW) et imputation multiple (MICE) pour corriger biais et données manquantes.</li><li>Prédiction de réponse au traitement (régression logistique, Random Forest, GBM, XGBoost).</li><li>Modèles de survie (Cox, AFT, Aalen) : chimiothérapie identifiée comme facteur protecteur majeur (−85 % de risque).</li></ul>
+          </div>
+        </div>
+        <div class="xp" data-reveal>
+          <div class="when"><span data-i18n="x3.when">Mai 2024 – Juil. 2024</span><span class="place">Paris</span></div>
+          <div>
+            <h3 data-i18n="x3.role">Data Analyst</h3>
+            <div class="org">AttijariWafa Bank Europe</div>
+            <ul data-i18n="x3.ul"><li>Tableaux de bord Power BI pour le suivi du recouvrement et de la dégradation des comptes.</li><li>Automatisation de reportings Excel (VBA) pour fiabiliser les KPIs financiers.</li></ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stack -->
+    <section id="stack">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow" data-i18n="stack.eyebrow">Stack</p>
+          <h2 data-i18n="stack.title">Mes outils</h2>
+          <p data-i18n="stack.sub">Choisis pour le travail à faire, pas pour faire joli sur un CV.</p>
+        </div>
+        <div class="stack-grid">
+          <div data-reveal>
+            <h3>IA &amp; ML</h3>
+            <div class="chips">
+              <span class="chip">Python</span><span class="chip">PyTorch</span>
+              <span class="chip">TensorFlow</span><span class="chip">Scikit-learn</span><span class="chip">RAG</span>
+            </div>
+          </div>
+          <div data-reveal>
+            <h3>Data &amp; BI</h3>
+            <div class="chips">
+              <span class="chip">SQL</span><span class="chip">Power BI</span>
+              <span class="chip">FastAPI</span><span class="chip">Qdrant</span><span class="chip">n8n</span>
+            </div>
+          </div>
+          <div data-reveal>
+            <h3 data-i18n="stack.g3">Stats &amp; R</h3>
+            <div class="chips">
+              <span class="chip">R</span>
+              <span class="chip" data-i18n="chip.causal">Inférence causale</span>
+              <span class="chip" data-i18n="chip.surv">Modèles de survie</span>
+              <span class="chip" data-i18n="chip.ts">Séries temporelles</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Formation -->
+    <section id="formation">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow" data-i18n="edu.eyebrow">Formation</p>
+          <h2 data-i18n="edu.title">Mon parcours académique</h2>
+        </div>
+        <div class="edu" data-reveal>
+          <div class="when">2020 – 2025<span class="place" style="display:block;margin-top:4px">Rouen</span></div>
+          <div>
+            <h3 data-i18n="e1.t">Ingénieur en Mathématiques Appliquées</h3>
+            <div class="org">INSA Rouen Normandie</div>
+            <p data-i18n="e1.b">Recherche opérationnelle, séries temporelles, Deep &amp; Machine Learning.</p>
+          </div>
+        </div>
+        <div class="edu" data-reveal>
+          <div class="when">2024 – 2025<span class="place" style="display:block;margin-top:4px">Rouen</span></div>
+          <div>
+            <h3 data-i18n="e2.t">Master Actuariat &amp; Ingénierie Mathématique</h3>
+            <div class="org">Université Rouen Normandie</div>
+            <p data-i18n="e2.b">Actuariat vie &amp; non-vie, réassurance, outils statistiques en assurance.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact">
+      <div class="wrap">
+        <div class="contact-box" data-reveal>
+          <p class="eyebrow" data-i18n="contact.eyebrow">Contact</p>
+          <h2 data-i18n="contact.title">Construisons quelque chose ensemble</h2>
+          <p data-i18n="contact.b">Un projet data, une opportunité, une idée à explorer ? Écris-moi quelques lignes sur le problème, ça me suffit pour voir si je peux aider.</p>
+          <div class="contact-links">
+            <a href="mailto:abdelmalekbensouda@gmail.com" class="btn btn-sea">Email</a>
+            <a href="https://linkedin.com/in/abdelmalek-bensouda" target="_blank" rel="noopener" class="btn">LinkedIn</a>
+            <a href="https://github.com/" target="_blank" rel="noopener" class="btn">GitHub</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-inner">
+      <span>© 2026 Abdelmalek Bensouda</span>
+      <span data-i18n="footer.role">Data Scientist · Paris, France</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
