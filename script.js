@@ -220,17 +220,24 @@ function applyLang(lang) {
   samples.forEach((s) => { minX = Math.min(minX, s.re); maxX = Math.max(maxX, s.re); minY = Math.min(minY, s.im); maxY = Math.max(maxY, s.im); });
   const dcx = (minX + maxX) / 2, dcy = (minY + maxY) / 2, dW = maxX - minX, dH = maxY - minY;
 
-  let W, H, dpr, scale, cx, cy, fullPts = [];
-  const TX = (x) => cx + (x - dcx) * scale;
-  const TY = (y) => cy + (y - dcy) * scale;
+  // Trois oiseaux volant côte à côte (en formation)
+  const BIRDS = [
+    { fx: -1, fy:  0.12, s: 0.78, ph: 2.2 },
+    { fx:  0, fy: -0.10, s: 1.00, ph: 0.0 },
+    { fx:  1, fy:  0.12, s: 0.78, ph: 4.3 },
+  ];
+
   function penData(tt) {
     let x = 0, y = 0;
     for (const term of terms) { x += term.amp * Math.cos(term.freq * tt + term.phase); y += term.amp * Math.sin(term.freq * tt + term.phase); }
     return { x, y };
   }
-  function computeFull() {
-    const a = [];
-    for (let i = 0; i <= N; i++) { const p = penData((2 * Math.PI * i) / N); a.push({ x: TX(p.x), y: TY(p.y) }); }
+
+  let W, H, dpr, baseScale, cx, cy, spacing;
+  function tf(b) { return { sc: baseScale * b.s, ox: cx + b.fx * spacing, oy: cy + b.fy * H }; }
+  function computeFull(b) {
+    const { sc, ox, oy } = tf(b); const a = [];
+    for (let i = 0; i <= N; i++) { const p = penData((2 * Math.PI * i) / N); a.push({ x: ox + (p.x - dcx) * sc, y: oy + (p.y - dcy) * sc }); }
     return a;
   }
   function layout() {
@@ -239,25 +246,27 @@ function applyLang(lang) {
     const cssH = Math.round(cssW * 0.5);
     canvas.width = cssW * dpr; canvas.height = cssH * dpr; canvas.style.height = cssH + "px";
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    W = cssW; H = cssH;
-    scale = Math.min((W * 0.84) / dW, (H * 0.84) / dH);
-    cx = W / 2; cy = H / 2;
-    fullPts = computeFull();
+    W = cssW; H = cssH; cx = W / 2; cy = H / 2;
+    spacing = W * 0.31;
+    baseScale = Math.min((W * 0.30) / dW, (H * 0.58) / dH);
+    BIRDS.forEach((b) => { b._full = computeFull(b); });
   }
 
-  let colLine = "rgba(23,182,204,0.2)", colPen = "#1577C7", colDot = "#17B6CC", colGhost = "rgba(21,119,199,0.16)";
+  let colLine = "rgba(23,182,204,0.18)", colPen = "#1577C7", colDot = "#17B6CC", colGhost = "rgba(21,119,199,0.14)";
   function refreshColors() {
     const cs = getComputedStyle(document.documentElement);
     colPen = (cs.getPropertyValue("--sea") || "#1577C7").trim();
     const aqua = (cs.getPropertyValue("--aqua") || "#17B6CC").trim();
-    colLine = aqua + "33"; colDot = aqua; colGhost = colPen + "26";
+    colLine = aqua + "2b"; colDot = aqua; colGhost = colPen + "22";
   }
   window.__epiColors = refreshColors;
 
-  const DURATION = 14;     // secondes par tour complet
-  const MAXCIRCLES = 70;   // cercles dessinés (les plus gros)
+  const DURATION = 14;
+  const MAXCIRCLES = 26;
   const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  let t = 0, last = performance.now(), progress = [];
+  let t = 0, last = performance.now();
+  let trails = BIRDS.map(() => []);
+  const MAXTRAIL = 340;
 
   function strokePts(pts, color, width) {
     if (pts.length < 2) return;
@@ -271,39 +280,39 @@ function applyLang(lang) {
     const dt = Math.min((now - last) / 1000, 0.05); last = now;
     ctx.clearRect(0, 0, W, H);
 
-    // oiseau complet en filigrane
-    strokePts(fullPts, colGhost, 1.5);
-
-    // chaîne de cercles
-    let x = 0, y = 0; ctx.lineWidth = 1;
-    for (let i = 0; i < terms.length; i++) {
-      const term = terms[i];
-      const px = x, py = y;
-      x += term.amp * Math.cos(term.freq * t + term.phase);
-      y += term.amp * Math.sin(term.freq * t + term.phase);
-      if (i < MAXCIRCLES) {
-        const r = term.amp * scale;
-        if (r > 0.6) {
-          ctx.strokeStyle = colLine;
-          ctx.beginPath(); ctx.arc(TX(px), TY(py), r, 0, 6.2832); ctx.stroke();
-          ctx.beginPath(); ctx.moveTo(TX(px), TY(py)); ctx.lineTo(TX(x), TY(y)); ctx.stroke();
+    BIRDS.forEach((b, k) => {
+      const { sc, ox, oy } = tf(b);
+      strokePts(b._full, colGhost, 1.4);
+      let x = 0, y = 0; ctx.lineWidth = 1;
+      for (let i = 0; i < terms.length; i++) {
+        const term = terms[i];
+        const px = x, py = y;
+        x += term.amp * Math.cos(term.freq * (t + b.ph) + term.phase);
+        y += term.amp * Math.sin(term.freq * (t + b.ph) + term.phase);
+        if (i < MAXCIRCLES) {
+          const r = term.amp * sc;
+          if (r > 0.7) {
+            const sx1 = ox + (px - dcx) * sc, sy1 = oy + (py - dcy) * sc;
+            ctx.strokeStyle = colLine;
+            ctx.beginPath(); ctx.arc(sx1, sy1, r, 0, 6.2832); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(sx1, sy1); ctx.lineTo(ox + (x - dcx) * sc, oy + (y - dcy) * sc); ctx.stroke();
+          }
         }
       }
-    }
-    const penx = TX(x), peny = TY(y);
-    progress.push({ x: penx, y: peny });
-
-    // tracé lumineux en cours
-    strokePts(progress, colPen, 2.6);
-    ctx.fillStyle = colDot; ctx.beginPath(); ctx.arc(penx, peny, 3, 0, 6.2832); ctx.fill();
+      const penx = ox + (x - dcx) * sc, peny = oy + (y - dcy) * sc;
+      trails[k].push({ x: penx, y: peny });
+      if (trails[k].length > MAXTRAIL) trails[k].shift();
+      strokePts(trails[k], colPen, 2.2);
+      ctx.fillStyle = colDot; ctx.beginPath(); ctx.arc(penx, peny, 2.6, 0, 6.2832); ctx.fill();
+    });
 
     t += (2 * Math.PI * dt) / DURATION;
-    if (t >= 2 * Math.PI) { t -= 2 * Math.PI; progress = []; }
+    if (t >= 2 * Math.PI) t -= 2 * Math.PI;
     requestAnimationFrame(frame);
   }
 
-  function drawStatic() { ctx.clearRect(0, 0, W, H); strokePts(fullPts, colPen, 2.4); }
+  function drawStatic() { ctx.clearRect(0, 0, W, H); BIRDS.forEach((b) => strokePts(b._full, colPen, 2.1)); }
   function start() { layout(); refreshColors(); if (reduce) drawStatic(); else requestAnimationFrame(frame); }
-  window.addEventListener("resize", () => { layout(); progress = []; if (reduce) drawStatic(); });
+  window.addEventListener("resize", () => { layout(); trails = BIRDS.map(() => []); if (reduce) drawStatic(); });
   start();
 })();
