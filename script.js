@@ -262,7 +262,7 @@ function applyLang(lang) {
   window.__epiColors = refreshColors;
 
   const DURATION = 14;
-  const MAXCIRCLES = 26;
+  const MAXCIRCLES = 44;
   const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   let t = 0, last = performance.now();
   let trails = BIRDS.map(() => []);
