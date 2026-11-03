@@ -22,6 +22,7 @@
       <div class="nav-links">
         <a href="#faire" class="hide-sm" data-i18n="nav.what">Ce que je fais</a>
         <a href="#projets" data-i18n="nav.projects">Projets</a>
+        <a href="#recherche" class="hide-sm" data-i18n="nav.research">Recherche</a>
         <a href="#experience" class="hide-sm" data-i18n="nav.experience">Expérience</a>
         <a href="#stack" class="hide-sm" data-i18n="nav.stack">Stack</a>
         <a href="blog.html" data-i18n="nav.blog">Blog</a>
@@ -40,10 +41,6 @@
     <div class="field"></div>
     <div class="hero-content wrap">
       <h1 class="greet" data-i18n="hero.greet">Bonjour<b>.</b></h1>
-      <div class="epi-wrap">
-        <canvas id="epi" class="epi" width="560" height="370" role="img" aria-label="Oiseau dessiné par une série de Fourier"></canvas>
-      </div>
-      <p class="epi-cap" data-i18n="hero.cap">un oiseau dessiné par une série de Fourier</p>
       <p class="lead" data-i18n="hero.lead">Bienvenue — jette un œil à ce que je construis.</p>
       <div class="hero-cta">
         <a href="#projets" class="btn" data-i18n="hero.cta1">Voir mes projets</a>
@@ -63,19 +60,19 @@
         </div>
         <div class="cards">
           <div class="card" data-reveal>
-            <div class="ico">🌊</div>
             <h3 data-i18n="c1.t">Machine learning en production</h3>
             <p data-i18n="c1.b">Scoring, NLP, systèmes RAG et agents LLM — conçus pour la précision, la latence et le coût réels, pas pour une démo de benchmark.</p>
+            <p class="card-ex" data-i18n="c1.ex">Ex. : scoring par LLM · RAG · agents · NLP</p>
           </div>
           <div class="card" data-reveal>
-            <div class="ico">⚙️</div>
             <h3 data-i18n="c2.t">Pipelines data &amp; automatisation</h3>
             <p data-i18n="c2.b">Ingestion, transformation, reporting et workflows (n8n, APIs). Des chaînes reproductibles qui font gagner du temps aux équipes.</p>
+            <p class="card-ex" data-i18n="c2.ex">Ex. : n8n · APIs REST · reporting automatisé</p>
           </div>
           <div class="card" data-reveal>
-            <div class="ico">📊</div>
             <h3 data-i18n="c3.t">Modélisation statistique</h3>
             <p data-i18n="c3.b">Inférence causale, modèles de survie, séries temporelles. La rigueur scientifique au service de décisions fiables.</p>
+            <p class="card-ex" data-i18n="c3.ex">Ex. : IPTW · modèles de Cox · séries temporelles</p>
           </div>
         </div>
       </div>
@@ -110,6 +107,42 @@
             </div>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- Recherche -->
+    <section id="recherche">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow" data-i18n="research.eyebrow">Recherche</p>
+          <h2 data-i18n="research.title">Recherche &amp; études</h2>
+          <p data-i18n="research.sub">Mes travaux analytiques les plus poussés — inférence causale, modèles de survie, apprentissage supervisé.</p>
+        </div>
+        <div class="project" data-reveal>
+          <div class="num">01</div>
+          <div>
+            <div class="when" data-i18n="r1.when" style="color:var(--muted);font-size:.88rem;margin-bottom:8px">2025 · Oncologie</div>
+            <h3 data-i18n="r1.t">Modélisation de la survie en cancer du poumon (NSCLC)</h3>
+            <p data-i18n="r1.b">Sur une cohorte réelle de 933 patients : correction des biais par inférence causale (IPTW), imputation multiple (MICE) et modèles de survie (Cox, AFT, Aalen) pour isoler les facteurs de pronostic.</p>
+            <div class="tags">
+              <span class="tag" data-i18n="chip.causal">Inférence causale</span>
+              <span class="tag" data-i18n="chip.surv">Modèles de survie</span>
+              <span class="tag">R</span>
+            </div>
+          </div>
+        </div>
+        <div class="project" data-reveal>
+          <div class="num">02</div>
+          <div>
+            <div class="when" data-i18n="r2.when" style="color:var(--muted);font-size:.88rem;margin-bottom:8px">2024–2025 · Machine Learning</div>
+            <h3 data-i18n="r2.t">Méthodes de boosting pour la prédiction du churn</h3>
+            <p data-i18n="r2.b">Étude théorique des méthodes de boosting, puis mise en pratique sur 7 000+ clients : benchmark de modèles ensemblistes et traduction en leviers marketing concrets.</p>
+            <div class="tags">
+              <span class="tag">Boosting</span><span class="tag">XGBoost</span><span class="tag">Random Forest</span>
+            </div>
+          </div>
+        </div>
+        <p data-reveal data-i18n="research.note" style="color:var(--muted);margin-top:22px">D'autres notes et articles arrivent au fil du temps sur le blog.</p>
       </div>
     </section>
 
