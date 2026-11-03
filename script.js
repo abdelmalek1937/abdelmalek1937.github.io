@@ -7,7 +7,7 @@
 /* ---------------- i18n (traductions) ---------------- */
 const I18N = {
   fr: {
-    "nav.what": "À propos", "nav.projects": "Projets & recherche", "nav.experience": "Expérience",
+    "nav.what": "À propos", "nav.edu": "Formation", "nav.projects": "Projets & recherche", "nav.experience": "Expérience",
     "nav.stack": "Stack", "nav.blog": "Blog", "nav.collab": "Collaborer",
     "intro": "bonjour<b>.</b>",
     "hero.greet": "bonjour<b>.</b>",
@@ -70,7 +70,7 @@ const I18N = {
     "back": "← Retour au blog"
   },
   en: {
-    "nav.what": "About", "nav.projects": "Projects & research", "nav.experience": "Experience",
+    "nav.what": "About", "nav.edu": "Education", "nav.projects": "Projects & research", "nav.experience": "Experience",
     "nav.stack": "Stack", "nav.blog": "Blog", "nav.collab": "Let's talk",
     "intro": "hello<b>.</b>",
     "hero.greet": "hello<b>.</b>",
