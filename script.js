@@ -11,7 +11,9 @@ const I18N = {
     "nav.stack": "Stack", "nav.blog": "Blog", "nav.collab": "Collaborer",
     "intro": "bonjour<b>.</b>",
     "hero.greet": "Bonjour<b>.</b>",
-    "hero.lead": "Bienvenue — jette un œil à ce que je construis.",
+    "hero.lead": "Clique sur le « Bonjour » pour faire des vagues 🌊",
+    "intro.eyebrow": "Enchanté",
+    "intro.role": "Ingénieur en mathématiques appliquées (INSA Rouen) &amp; data scientist. Je transforme des données en décisions qui tiennent.",
     "hero.cap": "un oiseau dessiné par une série de Fourier",
     "hero.cta1": "Voir mes projets", "hero.cta2": "Collaborer",
     "what.eyebrow": "Ce que je fais",
@@ -71,7 +73,9 @@ const I18N = {
     "nav.stack": "Stack", "nav.blog": "Blog", "nav.collab": "Let's talk",
     "intro": "hello<b>.</b>",
     "hero.greet": "Hello<b>.</b>",
-    "hero.lead": "Welcome — take a look at what I build.",
+    "hero.lead": "Click the “Hello” to make waves 🌊",
+    "intro.eyebrow": "Nice to meet you",
+    "intro.role": "Applied-mathematics engineer (INSA Rouen) &amp; data scientist. I turn data into decisions that hold up.",
     "hero.cap": "a bird drawn by a Fourier series",
     "hero.cta1": "See my work", "hero.cta2": "Let's talk",
     "what.eyebrow": "What I do",
@@ -138,6 +142,7 @@ function applyLang(lang) {
   document.documentElement.setAttribute("lang", lang);
   document.querySelectorAll(".lang button").forEach((b) => b.classList.toggle("active", b.dataset.lang === lang));
   try { localStorage.setItem("lang", lang); } catch (e) {}
+  if (window.__pixelRebuild) window.__pixelRebuild();
 }
 
 /* ---------------- Thème ---------------- */
@@ -151,7 +156,7 @@ function applyLang(lang) {
     root.setAttribute("data-theme", next);
     try { localStorage.setItem("theme", next); } catch (e) {}
     setIcon();
-    if (window.__epiColors) window.__epiColors();
+    if (window.__pixelColors) window.__pixelColors();
   });
 })();
 
@@ -159,6 +164,36 @@ function applyLang(lang) {
 (function () {
   applyLang(getLang());
   document.querySelectorAll(".lang button").forEach((b) => b.addEventListener("click", () => applyLang(b.dataset.lang)));
+})();
+
+/* ---------------- « Bonjour » cliquable → présentation ---------------- */
+(function () {
+  const g = document.getElementById("greet");
+  const r = document.getElementById("intro-reveal");
+  const hint = document.getElementById("hero-hint");
+  if (!g || !r) return;
+  function toggle() {
+    const open = r.classList.toggle("open");
+    g.setAttribute("aria-expanded", open ? "true" : "false");
+    if (hint) hint.style.opacity = open ? "0" : "";
+  }
+  g.addEventListener("click", toggle);
+  g.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); }
+  });
+})();
+
+/* ---------------- Menu mobile (hamburger) ---------------- */
+(function () {
+  const btn = document.getElementById("nav-toggle");
+  const menu = document.getElementById("nav-links");
+  if (!btn || !menu) return;
+  function close() { menu.classList.remove("open"); btn.textContent = "☰"; }
+  btn.addEventListener("click", function () {
+    const open = menu.classList.toggle("open");
+    btn.textContent = open ? "✕" : "☰";
+  });
+  menu.querySelectorAll("a").forEach((a) => a.addEventListener("click", close));
 })();
 
 /* ---------------- Apparition au défilement ---------------- */
@@ -171,20 +206,96 @@ function applyLang(lang) {
   items.forEach((el) => io.observe(el));
 })();
 
-/* ---------------- Bulles de mer ---------------- */
+/* ---------------- Hero : « Bonjour » pixelisé + onde au clic ---------------- */
 (function () {
-  const field = document.querySelector(".field");
-  if (!field) return;
-  for (let i = 0; i < 16; i++) {
-    const b = document.createElement("span");
-    b.className = "bubble";
-    const s = 6 + Math.random() * 20;
-    b.style.width = b.style.height = s + "px";
-    b.style.left = Math.random() * 100 + "%";
-    b.style.animationDuration = 9 + Math.random() * 10 + "s";
-    b.style.animationDelay = -Math.random() * 16 + "s";
-    field.appendChild(b);
+  const canvas = document.getElementById("pixelcanvas");
+  const hero = document.getElementById("hero");
+  if (!canvas || !hero) return;
+  const ctx = canvas.getContext("2d");
+
+  let W = 0, H = 0, pixels = [], ripples = [], inkRGB = [13, 13, 13];
+  const GAP = 9, SIZE = 6, SPEED = 470, WID = 48;
+
+  function wordForLang() {
+    try { return (localStorage.getItem("lang") || "fr") === "en" ? "Hello" : "Bonjour"; }
+    catch (e) { return "Bonjour"; }
   }
+  function hexToRgb(h) {
+    h = (h || "").trim().replace("#", "");
+    if (h.length === 3) h = h.split("").map((c) => c + c).join("");
+    const n = parseInt(h || "0d0d0d", 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  }
+  function refreshColors() {
+    const cs = getComputedStyle(document.documentElement);
+    inkRGB = hexToRgb(cs.getPropertyValue("--ink") || "#0d0d0d");
+  }
+  window.__pixelColors = refreshColors;
+
+  function build() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = hero.clientWidth; H = hero.clientHeight;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    canvas.style.width = W + "px"; canvas.style.height = H + "px";
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const off = document.createElement("canvas");
+    off.width = W; off.height = H;
+    const o = off.getContext("2d");
+    const word = wordForLang();
+    let fs = Math.min((W * 0.92) / (word.length * 0.58), H * 0.52);
+    fs = Math.max(56, fs);
+    o.fillStyle = "#fff";
+    o.font = "800 " + fs + 'px "Hanken Grotesk", system-ui, sans-serif';
+    o.textAlign = "center"; o.textBaseline = "middle";
+    o.fillText(word, W / 2, H * 0.42);
+    const data = o.getImageData(0, 0, W, H).data;
+    pixels = [];
+    for (let y = 0; y < H; y += GAP) {
+      for (let x = 0; x < W; x += GAP) {
+        if (data[(y * W + x) * 4 + 3] > 128) pixels.push({ x: x, y: y });
+      }
+    }
+  }
+
+  function addRipple(clientX, clientY) {
+    const rect = canvas.getBoundingClientRect();
+    ripples.push({ x: clientX - rect.left, y: clientY - rect.top, t0: performance.now() });
+    if (ripples.length > 6) ripples.shift();
+  }
+  hero.addEventListener("pointerdown", function (e) { addRipple(e.clientX, e.clientY); });
+
+  function frame(now) {
+    ctx.clearRect(0, 0, W, H);
+    ripples = ripples.filter((r) => (now - r.t0) / 1000 < 2.4);
+    const base = "rgba(" + inkRGB[0] + "," + inkRGB[1] + "," + inkRGB[2] + ",";
+    for (let i = 0; i < pixels.length; i++) {
+      const p = pixels[i];
+      let ox = 0, oy = 0, bright = 0;
+      for (let k = 0; k < ripples.length; k++) {
+        const r = ripples[k];
+        const a = (now - r.t0) / 1000;
+        const dx = p.x - r.x, dy = p.y - r.y;
+        const d = Math.hypot(dx, dy) || 0.001;
+        const delta = d - a * SPEED;
+        if (delta > -WID && delta < WID) {
+          const fall = Math.cos((delta / WID) * (Math.PI / 2));
+          const push = 16 * Math.exp(-a * 1.5) * fall;
+          ox += (dx / d) * push; oy += (dy / d) * push;
+          bright += fall * Math.max(0, 1 - a * 0.5);
+        }
+      }
+      const alpha = 0.12 + Math.min(bright, 1) * 0.6;
+      ctx.fillStyle = base + alpha.toFixed(3) + ")";
+      ctx.fillRect(p.x + ox - SIZE / 2, p.y + oy - SIZE / 2, SIZE, SIZE);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function start() { build(); refreshColors(); requestAnimationFrame(frame); }
+  window.__pixelRebuild = build;
+  let rz; window.addEventListener("resize", function () { clearTimeout(rz); rz = setTimeout(build, 150); });
+  start();
 })();
 
 /* ===================== ÉPICYCLE (oiseau) ===================== */

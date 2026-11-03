@@ -19,7 +19,8 @@
   <nav class="nav">
     <div class="nav-inner">
       <a href="index.html" class="brand">AB<b>.</b></a>
-      <div class="nav-links">
+      <button class="nav-toggle" id="nav-toggle" aria-label="Menu">☰</button>
+      <div class="nav-links" id="nav-links">
         <a href="#faire" class="hide-sm" data-i18n="nav.what">Ce que je fais</a>
         <a href="#projets" data-i18n="nav.projects">Projets</a>
         <a href="#recherche" class="hide-sm" data-i18n="nav.research">Recherche</a>
@@ -36,12 +37,11 @@
     </div>
   </nav>
 
-  <!-- Hero avec épicycle -->
-  <header class="hero">
-    <div class="field"></div>
+  <!-- Hero : « Bonjour » pixelisé, clic = onde sur l'eau -->
+  <header class="hero" id="hero">
+    <canvas id="pixelcanvas" class="pixelcanvas" aria-hidden="true"></canvas>
     <div class="hero-content wrap">
-      <h1 class="greet" data-i18n="hero.greet">Bonjour<b>.</b></h1>
-      <p class="lead" data-i18n="hero.lead">Bienvenue — jette un œil à ce que je construis.</p>
+      <p class="pixel-hint" id="hero-hint" data-i18n="hero.lead">Clique sur le « Bonjour » pour faire des vagues 🌊</p>
       <div class="hero-cta">
         <a href="#projets" class="btn" data-i18n="hero.cta1">Voir mes projets</a>
         <a href="#contact" class="btn btn-sea" data-i18n="hero.cta2">Collaborer</a>
@@ -50,6 +50,15 @@
   </header>
 
   <main>
+    <!-- Présentation (apparaît au défilement) -->
+    <section id="intro" class="intro-sec">
+      <div class="wrap">
+        <p class="eyebrow" data-reveal data-i18n="intro.eyebrow">Enchanté</p>
+        <h2 class="bigname" data-reveal>Abdelmalek Bensouda</h2>
+        <p class="bigrole" data-reveal data-i18n="intro.role">Ingénieur en mathématiques appliquées (INSA Rouen) &amp; data scientist. Je transforme des données en décisions qui tiennent.</p>
+      </div>
+    </section>
+
     <!-- Ce que je fais -->
     <section id="faire">
       <div class="wrap">
