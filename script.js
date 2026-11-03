@@ -12,6 +12,8 @@ const I18N = {
     "intro": "bonjour<b>.</b>",
     "hero.greet": "bonjour<b>.</b>",
     "hero.lead": "Clique sur le « Bonjour » pour faire des vagues 🌊",
+    "hero.name": "Je m'appelle Abdelmalek, data scientist<b>.</b>",
+    "hero.pitch": "Ingénieur en mathématiques appliquées. J'explore les données, je construis des modèles, et je garde ce qui tient.",
     "intro.eyebrow": "Enchanté",
     "intro.role": "Ingénieur en mathématiques appliquées (INSA Rouen) &amp; data scientist. Je transforme des données en décisions qui tiennent.",
     "hero.cap": "un oiseau dessiné par une série de Fourier",
@@ -74,6 +76,8 @@ const I18N = {
     "intro": "hello<b>.</b>",
     "hero.greet": "hello<b>.</b>",
     "hero.lead": "Click the “Hello” to make waves 🌊",
+    "hero.name": "I'm Abdelmalek, a data scientist<b>.</b>",
+    "hero.pitch": "Applied-mathematics engineer. I explore data, build models, and keep what holds.",
     "intro.eyebrow": "Nice to meet you",
     "intro.role": "Applied-mathematics engineer (INSA Rouen) &amp; data scientist. I turn data into decisions that hold up.",
     "hero.cap": "a bird drawn by a Fourier series",
@@ -215,8 +219,8 @@ function applyLang(lang) {
   if (!canvas || !hero) return;
   const ctx = canvas.getContext("2d");
 
-  let W = 0, H = 0, pixels = [], ripples = [], inkRGB = [13, 13, 13];
-  const GAP = 11, SIZE = 5, SPEED = 470, WID = 48;
+  let W = 0, H = 0, pixels = [], ripples = [], inkRGB = [13, 13, 13], paused = false;
+  const GAP = 13, SIZE = 5, SPEED = 470, WID = 48;
 
   function wordForLang() {
     try { return (localStorage.getItem("lang") || "fr") === "en" ? "Hello" : "Bonjour"; }
@@ -236,7 +240,7 @@ function applyLang(lang) {
 
   function build() {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    W = hero.clientWidth; H = hero.clientHeight;
+    W = window.innerWidth; H = window.innerHeight;
     canvas.width = W * dpr; canvas.height = H * dpr;
     canvas.style.width = W + "px"; canvas.style.height = H + "px";
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -257,6 +261,7 @@ function applyLang(lang) {
   hero.addEventListener("pointerdown", function (e) { addRipple(e.clientX, e.clientY); });
 
   function frame(now) {
+    if (paused) return;
     ctx.clearRect(0, 0, W, H);
     ripples = ripples.filter((r) => (now - r.t0) / 1000 < 2.4);
     const base = "rgba(" + inkRGB[0] + "," + inkRGB[1] + "," + inkRGB[2] + ",";
@@ -287,6 +292,16 @@ function applyLang(lang) {
   window.__pixelRebuild = build;
   let rz; window.addEventListener("resize", function () { clearTimeout(rz); rz = setTimeout(build, 150); });
   start();
+
+  // pause l'animation quand le hero n'est plus à l'écran (perfs)
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (e.isIntersecting) { if (paused) { paused = false; requestAnimationFrame(frame); } }
+        else { paused = true; }
+      });
+    }, { threshold: 0 }).observe(hero);
+  }
 })();
 
 /* ===================== ÉPICYCLE (oiseau) ===================== */

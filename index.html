@@ -13,8 +13,6 @@
 </head>
 <body>
 
-  <div class="intro"><span data-i18n="intro">bonjour<b>.</b></span></div>
-
   <!-- Navigation -->
   <nav class="nav">
     <div class="nav-inner">
@@ -37,22 +35,21 @@
     </div>
   </nav>
 
-  <!-- Hero : « Bonjour » pixelisé, clic = onde sur l'eau -->
+  <!-- Hero : écran pixelisé — slide 1 "bonjour.", slide 2 présentation -->
   <header class="hero" id="hero">
     <canvas id="pixelcanvas" class="pixelcanvas" aria-hidden="true"></canvas>
-    <div class="hero-word"><span class="greet" data-i18n="hero.greet">bonjour<b>.</b></span></div>
+    <div class="slide">
+      <span class="greet" data-i18n="hero.greet">bonjour<b>.</b></span>
+    </div>
+    <div class="slide">
+      <div class="slide-inner" data-reveal>
+        <h1 class="bigname" data-i18n="hero.name">Je m'appelle Abdelmalek, data scientist<b>.</b></h1>
+        <p class="bigrole" data-i18n="hero.pitch">Ingénieur en mathématiques appliquées. J'explore les données, je construis des modèles, et je garde ce qui tient.</p>
+      </div>
+    </div>
   </header>
 
   <main>
-    <!-- Présentation (apparaît au défilement) -->
-    <section id="intro" class="intro-sec">
-      <div class="wrap">
-        <p class="eyebrow" data-reveal data-i18n="intro.eyebrow">Enchanté</p>
-        <h2 class="bigname" data-reveal>Abdelmalek Bensouda</h2>
-        <p class="bigrole" data-reveal data-i18n="intro.role">Ingénieur en mathématiques appliquées (INSA Rouen) &amp; data scientist. Je transforme des données en décisions qui tiennent.</p>
-      </div>
-    </section>
-
     <!-- Ce que je fais -->
     <section id="faire">
       <div class="wrap">
