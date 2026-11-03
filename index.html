@@ -35,16 +35,18 @@
     </div>
   </nav>
 
-  <!-- Hero : écran pixelisé — slide 1 "bonjour.", slide 2 présentation -->
+  <!-- Hero : écran pixelisé — "bonjour." puis présentation en fondu au défilement -->
   <header class="hero" id="hero">
     <canvas id="pixelcanvas" class="pixelcanvas" aria-hidden="true"></canvas>
-    <div class="slide">
-      <span class="greet" data-i18n="hero.greet">bonjour<b>.</b></span>
-    </div>
-    <div class="slide">
-      <div class="slide-inner" data-reveal>
-        <h1 class="bigname" data-i18n="hero.name">Je m'appelle Abdelmalek, data scientist<b>.</b></h1>
-        <p class="bigrole" data-i18n="hero.pitch">Ingénieur en mathématiques appliquées. J'explore les données, je construis des modèles, et je garde ce qui tient.</p>
+    <div class="hero-sticky">
+      <div class="layer" id="layer-greet">
+        <span class="greet" data-i18n="hero.greet">bonjour<b>.</b></span>
+      </div>
+      <div class="layer" id="layer-intro">
+        <div class="slide-inner">
+          <h1 class="bigname" data-i18n="hero.name">Je m'appelle Abdelmalek, data scientist<b>.</b></h1>
+          <p class="bigrole" data-i18n="hero.pitch">Ingénieur en mathématiques appliquées. J'explore les données, je construis des modèles, et je garde ce qui tient.</p>
+        </div>
       </div>
     </div>
   </header>

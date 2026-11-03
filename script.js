@@ -212,6 +212,30 @@ function applyLang(lang) {
   items.forEach((el) => io.observe(el));
 })();
 
+/* ---------------- Hero : fondu "bonjour" → présentation au défilement ---------------- */
+(function () {
+  const hero = document.getElementById("hero");
+  const g = document.getElementById("layer-greet");
+  const intro = document.getElementById("layer-intro");
+  if (!hero || !g || !intro) return;
+  function smooth(a, b, x) { const t = Math.min(Math.max((x - a) / (b - a), 0), 1); return t * t * (3 - 2 * t); }
+  function onScroll() {
+    const vh = window.innerHeight;
+    const total = hero.offsetHeight - vh;
+    const sc = Math.min(Math.max(window.scrollY, 0), total > 0 ? total : 1);
+    const p = total > 0 ? sc / total : 0;
+    const gOp = 1 - smooth(0, 0.45, p);
+    const iOp = smooth(0.4, 0.85, p);
+    g.style.opacity = gOp;
+    g.style.transform = "translateY(" + (-24 * (1 - gOp)) + "px)";
+    intro.style.opacity = iOp;
+    intro.style.transform = "translateY(" + (24 * (1 - iOp)) + "px)";
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll);
+  onScroll();
+})();
+
 /* ---------------- Hero : « Bonjour » pixelisé + onde au clic ---------------- */
 (function () {
   const canvas = document.getElementById("pixelcanvas");
