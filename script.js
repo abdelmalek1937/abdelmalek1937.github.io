@@ -149,7 +149,9 @@ function applyLang(lang) {
 (function () {
   const root = document.documentElement;
   const btn = document.getElementById("theme-toggle");
-  function setIcon() { if (btn) btn.textContent = root.getAttribute("data-theme") === "dark" ? "☀" : "☾"; }
+  const SUN = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+  const MOON = '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>';
+  function setIcon() { if (btn) btn.innerHTML = root.getAttribute("data-theme") === "dark" ? SUN : MOON; }
   setIcon();
   if (btn) btn.addEventListener("click", function () {
     const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
@@ -214,7 +216,7 @@ function applyLang(lang) {
   const ctx = canvas.getContext("2d");
 
   let W = 0, H = 0, pixels = [], ripples = [], inkRGB = [13, 13, 13];
-  const GAP = 9, SIZE = 6, SPEED = 470, WID = 48;
+  const GAP = 11, SIZE = 5, SPEED = 470, WID = 48;
 
   function wordForLang() {
     try { return (localStorage.getItem("lang") || "fr") === "en" ? "Hello" : "Bonjour"; }
@@ -253,7 +255,8 @@ function applyLang(lang) {
     pixels = [];
     for (let y = 0; y < H; y += GAP) {
       for (let x = 0; x < W; x += GAP) {
-        if (data[(y * W + x) * 4 + 3] > 128) pixels.push({ x: x, y: y });
+        const isWord = data[(y * W + x) * 4 + 3] > 128;
+        pixels.push({ x: x, y: y, w: isWord });
       }
     }
   }
@@ -285,7 +288,7 @@ function applyLang(lang) {
           bright += fall * Math.max(0, 1 - a * 0.5);
         }
       }
-      const alpha = 0.12 + Math.min(bright, 1) * 0.6;
+      const alpha = (p.w ? 0.34 : 0.05) + Math.min(bright, 1) * 0.55;
       ctx.fillStyle = base + alpha.toFixed(3) + ")";
       ctx.fillRect(p.x + ox - SIZE / 2, p.y + oy - SIZE / 2, SIZE, SIZE);
     }
