@@ -10,7 +10,7 @@ const I18N = {
     "nav.what": "Ce que je fais", "nav.projects": "Projets", "nav.experience": "Expérience",
     "nav.stack": "Stack", "nav.blog": "Blog", "nav.collab": "Collaborer",
     "intro": "bonjour<b>.</b>",
-    "hero.greet": "Bonjour<b>.</b>",
+    "hero.greet": "bonjour<b>.</b>",
     "hero.lead": "Clique sur le « Bonjour » pour faire des vagues 🌊",
     "intro.eyebrow": "Enchanté",
     "intro.role": "Ingénieur en mathématiques appliquées (INSA Rouen) &amp; data scientist. Je transforme des données en décisions qui tiennent.",
@@ -72,7 +72,7 @@ const I18N = {
     "nav.what": "What I do", "nav.projects": "Projects", "nav.experience": "Experience",
     "nav.stack": "Stack", "nav.blog": "Blog", "nav.collab": "Let's talk",
     "intro": "hello<b>.</b>",
-    "hero.greet": "Hello<b>.</b>",
+    "hero.greet": "hello<b>.</b>",
     "hero.lead": "Click the “Hello” to make waves 🌊",
     "intro.eyebrow": "Nice to meet you",
     "intro.role": "Applied-mathematics engineer (INSA Rouen) &amp; data scientist. I turn data into decisions that hold up.",
@@ -240,23 +240,11 @@ function applyLang(lang) {
     canvas.width = W * dpr; canvas.height = H * dpr;
     canvas.style.width = W + "px"; canvas.style.height = H + "px";
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-    const off = document.createElement("canvas");
-    off.width = W; off.height = H;
-    const o = off.getContext("2d");
-    const word = wordForLang();
-    let fs = Math.min((W * 0.92) / (word.length * 0.58), H * 0.52);
-    fs = Math.max(56, fs);
-    o.fillStyle = "#fff";
-    o.font = "800 " + fs + 'px "Hanken Grotesk", system-ui, sans-serif';
-    o.textAlign = "center"; o.textBaseline = "middle";
-    o.fillText(word, W / 2, H * 0.42);
-    const data = o.getImageData(0, 0, W, H).data;
+    // champ de pixels uniforme (le mot est écrit en texte par-dessus, en HTML)
     pixels = [];
     for (let y = 0; y < H; y += GAP) {
       for (let x = 0; x < W; x += GAP) {
-        const isWord = data[(y * W + x) * 4 + 3] > 128;
-        pixels.push({ x: x, y: y, w: isWord });
+        pixels.push({ x: x, y: y });
       }
     }
   }
@@ -288,7 +276,7 @@ function applyLang(lang) {
           bright += fall * Math.max(0, 1 - a * 0.5);
         }
       }
-      const alpha = (p.w ? 0.34 : 0.05) + Math.min(bright, 1) * 0.55;
+      const alpha = 0.06 + Math.min(bright, 1) * 0.6;
       ctx.fillStyle = base + alpha.toFixed(3) + ")";
       ctx.fillRect(p.x + ox - SIZE / 2, p.y + oy - SIZE / 2, SIZE, SIZE);
     }
