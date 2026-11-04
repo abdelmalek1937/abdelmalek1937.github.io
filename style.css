@@ -170,14 +170,17 @@ section:nth-of-type(even) { background: var(--bg2); }
 .tag { font-size: 0.78rem; padding: 4px 12px; border: 1px solid var(--line);
   border-radius: 100px; background: var(--bg); color: var(--ink); }
 
-/* clickable project */
-a.project { text-decoration: none; color: inherit;
+/* clickable project / formation */
+a.project, a.project:link, a.project:visited, a.project:hover, a.project *,
+a.edu, a.edu:link, a.edu:visited, a.edu:hover, a.edu * {
+  text-decoration: none; }
+a.project, a.edu { color: inherit;
   transition: background .18s ease, padding .18s ease; border-radius: 12px; }
-a.project:hover { background: var(--surface); padding-left: 16px; padding-right: 16px; }
-a.project h3 { display: inline-flex; align-items: center; gap: 8px; }
-a.project h3::after { content: "↗"; font-size: 1rem; color: var(--aqua);
+a.project:hover, a.edu:hover { background: var(--surface); padding-left: 16px; padding-right: 16px; }
+a.project h3, a.edu h3 { display: inline-flex; align-items: center; gap: 8px; }
+a.project h3::after, a.edu h3::after { content: "↗"; font-size: 1rem; color: var(--aqua);
   opacity: 0; transform: translate(-4px, 4px); transition: opacity .18s ease, transform .18s ease; }
-a.project:hover h3::after { opacity: 1; transform: translate(0, 0); }
+a.project:hover h3::after, a.edu:hover h3::after { opacity: 1; transform: translate(0, 0); }
 
 /* experience */
 .xp { display: grid; grid-template-columns: 180px 1fr; gap: 28px;
@@ -188,6 +191,11 @@ a.project:hover h3::after { opacity: 1; transform: translate(0, 0); }
 .xp .org { color: var(--sea); font-weight: 600; }
 .xp ul { margin: 12px 0 0; padding-left: 18px; color: var(--muted); }
 .xp ul li { margin-bottom: 7px; }
+.xp ul ul { margin: 7px 0 0; padding-left: 18px; }
+.xp ul ul li { margin-bottom: 4px; list-style: none; position: relative; }
+.xp ul ul li::before { content: "–"; position: absolute; left: -14px; }
+.xp-stack { color: var(--muted); font-size: 0.9rem; margin: 12px 0 0; }
+.xp-stack b { color: var(--ink); font-weight: 600; }
 
 /* stack */
 .stack-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
