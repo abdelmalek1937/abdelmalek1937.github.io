@@ -189,6 +189,10 @@ a.project:hover h3::after, a.edu:hover h3::after { opacity: 1; transform: transl
 .xp .when .place { display: block; margin-top: 4px; }
 .xp h3 { font-size: 1.25rem; margin-bottom: 6px; }
 .xp .org { color: var(--sea); font-weight: 600; }
+.xp .org a { color: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; transition: opacity .18s ease; }
+.xp .org a::after { content: "↗"; font-size: .85em; opacity: 0; transform: translate(-3px,3px); transition: opacity .18s ease, transform .18s ease; }
+.xp .org a:hover { opacity: .8; }
+.xp .org a:hover::after { opacity: 1; transform: translate(0,0); }
 .xp ul { margin: 12px 0 0; padding-left: 18px; color: var(--muted); }
 .xp ul li { margin-bottom: 7px; }
 .xp ul ul { margin: 7px 0 0; padding-left: 18px; }
